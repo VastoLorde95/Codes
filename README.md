@@ -12,6 +12,6 @@ The following functions have been implemented for string arithmetic in string_op
 
 1. add = adds the numbers in the two strings to produce a new string
 2. sub = subtracts the numbers in the two strings
-3. diivde_by_2 = halves the value of the number in the given string
+3. divde_by_2 = halves the value of the number in the given string
 4. naive_multiply = grade school multiplication algo to multiply two string numbers
 5. multiply = Karatsuba multiplication implementation to give the product of two string numbers
