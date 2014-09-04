@@ -9,12 +9,14 @@
 #include<string>
 using namespace std;
 
-
-/*
-	 A few helper functions
-*/
 string add(string a, string b);
 string sub(string a, string b);
+string multiply(string a, string b);
+string naive_multiply(string a, string b);
+
+/*
+*  A few helper functions
+*/
 
 
 /*This appends m 0s to the end of the string to act as a multiplication by 10^m*/
