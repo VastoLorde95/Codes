@@ -9,9 +9,66 @@
 #include<string>
 using namespace std;
 
+
+/*
+	 A few helper functions
+*/
+string add(string a, string b);
+string sub(string a, string b);
+
+
+/*This appends m 0s to the end of the string to act as a multiplication by 10^m*/
+string shift_left(string a, int m){
+	while(m--){
+		a = a + (char)(48);
+	}
+	return a;
+}
+
+/*This function removes all valueless 0s from the starting of the string*/
+string unpad_zeroes(string a){
+	int i = 0;
+	string zero("0");
+	while(a[i] == '0'){
+		a = a.substr(i+1);
+	}
+	if(a.length() == 0){
+		return zero;
+	}
+	return a;
+}
+
+/*This appends 'l' of zeroes to the beggining of the string*/
+string pad(string a, int l){
+	while(l--){
+		a = '0' + a;
+	}
+	
+	return a;
+}
+
+
+
 /*This function adds the two numbers a and b using grade school addition method*/
 string add(string a, string b){	
+	/* 	
+	*	If a is negative, the result is (b-a)
+	*	If b is negative, the result is (a-b)
+	*	If a and b are both negative the result is -(b+a)
+	*/
+	if(a[0] == '-' and b[0] == '-')
+		return '-' + add(a.substr(1), b.substr(1));
+	else if(a[0] == '-')
+		return sub(b, a.substr(1));
+	else if(b[0] == '-')
+		return sub(a, b.substr(1));
+	
+	
 	int a_length = a.length(), b_length = b.length();
+	if(a == "0")
+		return unpad_zeroes(b);
+	else if(b == "0")
+		return unpad_zeroes(a);
 	
 	string c = "";		//This is the new string where the result will be stored
 	
@@ -51,75 +108,113 @@ string add(string a, string b){
 	}
 	if(j >= 0){							//This handles the case where b has more digits than a
 		while(j>=0){
-		
-			digit2 = b[j] - 48;
-			
+			digit2 = b[j] - 48;	
 			total = digit2 + carry;
-			carry = total/10;
-			
-			if(carry!=0) total -= 10;
-			
+			carry = total/10;	
+			if(carry!=0) total -= 10;		
 			c = (char)(total + 48) + c;
 			
 			j--;
 		}
 	}
 	
-	
 	if (carry != 0) c = char(carry + 48) + c;		//This takes care of the final carry over if any
 	
-	j = 0;
-	while(c[j] == '0') c = c.substr(j+1);			//This takes care of any useless 0s in the beginning of the string
-	
-	if(c.length() == 0) c = '0';					//If the number has no digits at all, it should be a zero
-	
-	
-	return c;
+	return unpad_zeroes(c);
 }
 
 
 
 
 
-/*Ths function subtracts two given strings of numbers. This function runs only for positive integers and assumes that a > b*/
+/*Ths function subtracts two given strings of numbers*/
 string sub(string a, string b){
-	int a_length = a.length(), b_length = b.length();
+	/* 	
+	*	If a is negative, the result is -(b+a)
+	*	If b is negative, the result is (a+b)
+	*	If a and b are both negative the result is 	(b-a)
+	*/
+	if(a[0] == '-' and b[0] == '-')
+		return sub(b.substr(1), a.substr(1));
+	else if(a[0] == '-')
+		return '-' + add(a.substr(1), b);
+	else if(b[0] == '-')
+		return add(a, b.substr(1));
 	
-	string c = "";	//The result is appended into this string
+	/*We pad the two numbers and check which one is bigger so that we can assert wether the result is negative or not*/
+	int a_length = a.length(), b_length = b.length(), borrow_from, i, j;
 	
-	int borrow_from, i = a_length -1, j; // borrow_from is the index from which I am borrowing a number is necessary
+	bool is_negative = false;		// Is the result of the subtraction negative? It is false by default
+
+	string c = "", temp ="";		//The temp string has been made to accomodate string swaps
 	
-	for(j = b_length -1; j >= 0; j--){ //Since we have assumed that b is always the smaller number, the loop conditon only checks for the number of digits in b
-		if(b[j] <= a[i]) c = (char) (a[i] - b[j] + 48) + c;	//This is the case where we dont have to borrow from the next digits
-		
-		else{
-			borrow_from = i - 1;	//In this case we have to borrow
+	if(a_length > b_length){
+		b = pad(b, a_length - b_length);
+		j = b_length - 1;
+		i = a_length - 1;
+	}		
+	else if(a_length < b_length){
+		a = pad(a , b_length - a_length);
+		j = a_length - 1;
+		i = b_length - 1;
+	}
+	else{
+		j = a_length - 1;
+		i = j;
+	}
+	
+	/*
+		This method to compare strings works accurately only if they are of equal length.
+	    Hence we are padding them with zeroes if they are of unequal length
+	 */
+	if(b>a){
+		is_negative = true;		//This means the result will be negative
+		temp = a;
+		a = b;
+		b = temp;
+	}
+	
+	a = unpad_zeroes(a);
+	b = unpad_zeroes(b);
+	
+	if(b == "0"){
+		return unpad_zeroes(a);
+	}
+
+	for(j; j >= 0; j--){
+		if(b[j] <= a[i]){	
+			 //This is the case where we dont have to borrow from the next digits
+			 c = (char) (a[i] - b[j] + 48) + c;	
+		}
+		else{	
+			//In this case we have to borrow
+			borrow_from = i - 1;	
 			
-			while(a[borrow_from] == '0') borrow_from--;//This loop gives us the first index from where we can borrow aa digit
-			
-			a[borrow_from++]--;	//Decrease the value of the digit from where we borrow by one and change index towards the next digit to the right
-			while(borrow_from < i) a[borrow_from++] = 57;	//All numbers which could not lend a digit were 0s so now they change to 9s
+			while(a[borrow_from] == '0'){	
+				//This loop gives us the first index from where we can borrow a digit
+				 borrow_from--;
+			}
+			a[borrow_from++]--;
+			while(borrow_from < i) a[borrow_from++] = 57;
 			
 			c = char(a[i] - b[j] + 58) + c; // After succesfully borrowing, we can now subtract the numbers
 		}
 		i--;
 	}
-	
-	if(i >= 0){			//In case the string a has more digits than b, then the remaining digits are appended in this loop
+	if(i >= 0){			
+		//In case the string a has more digits than b, then the remaining digits are appended in this loop
 		while(i>=0){
 			c = a[i] + c;
-			
 			i--;
 		}
 	}
-	
-	j = 0;
-	while(c[j] == '0') c = c.substr(j+1);	//All valueless 0s are removed from the beginning eg. 00001 becomes 1
-	
-	if(c.length() == 0) c = '0';	//In case the previous loop removes all digits, it means the number was 0. This is fixed here
+	c = unpad_zeroes(c);
+	if(is_negative)
+		return '-' + c;
 	
 	return c;
 }
+
 
 
 
@@ -151,6 +246,92 @@ string div_by_two(string a){
 }
 
 
+/*
+*****Be warned! Dont use this for very large numbers as it will take significantly longer computational time.This function only works for non negative integers. It will give incorrect results for negative or non integral numbers*****
+The grade school multiplication algorithm for 2 numbers. This is of order n*m and is just a helper function
+for the Karatsuba algorithm.
+*/
+string naive_multiply(string a, string b){
+	string c = "0", temp = "", zeroes = "";	// each time a single digit from 'a' is multiplied to b, it is stored in temp
+	// 'c' is the final string that is returned
+	int a_length = a.length(), b_length = b.length(), i = a_length - 1, j, digit1, digit2, total, carry = 0;
+	while(i >= 0){
+		carry = 0;
+		j =  b_length - 1;
+		digit1 = a[i] - 48;
+		temp = "";
+		while( j >= 0){
+			digit2 = b[j] - 48;
+			total = digit1 * digit2 + carry;
+			carry = total/10;
+			total = total % 10;
+			temp = (char) (total + 48) + temp;
+			j--;
+		}
+		if(carry != 0)
+			temp = (char)(carry + 48) + temp;	//Adding the overflowed carry if any
+		
+		temp = temp + zeroes;//Padding the extra zeroes in the end corresponding to the stage of the multiplication
+		
+		zeroes = zeroes + (char)(48); //For the next stage one more zero will be required
+		
+		c = add(c, temp);	//Adding the new result to the total result
+		
+		i--;
+	}
+	
+	return unpad_zeroes(c);
+}
+
+
+/*
+*****Be warned!This function only works for non negative integers. It will give incorrect results for negative or non integral numbers*****
+This functions multiplies two numbers that are stored as strings using the
+Karatsuba fast multiplication algorithm.Since these functions are to be used for
+extremely large numbers, Karatsuba algorithm should provide significantly faster
+computations than the generic grade-school algorithm which involves n*m single digit 
+mulitplications. The complexity is n^{\log_23}
+ */
+string multiply(string a, string b){
+	string c;
+	float a_length = a.length(), b_length = b.length();
+
+	/*If the either of the two strings represents a single digit number, then we apply the grade school algorithm.
+	  This is the terminating case for recursion*/
+	if(a_length < 2 or b_length < 2)
+		return naive_multiply(a, b);
+		
+	if(a_length < b_length)
+		a = pad(a, b_length - a_length);
+	else if(a_length> b_length)
+		b = pad(b, a_length - b_length);
+	
+	int m = max(a_length, b_length);
+	
+	if( m % 2 == 1){
+		a = pad(a,1);
+		b = pad(b,1);
+		m++;
+	}
+		
+	//After initial computation and padding, the numbers are split into their upper and lower halves
+	string low1 = a.substr(m/2), low2 = b.substr(m/2) , high1 = a.substr(0, m/2), high2 = b.substr(0, m/2);
+
+	low1  = unpad_zeroes(low1);
+	low2  = unpad_zeroes(low2);
+	high1 = unpad_zeroes(high1);
+	high2 = unpad_zeroes(high2);
+
+	string z0 = multiply(low1, low2);
+	string z2 = multiply(high1, high2);
+	string z1 = sub( sub( multiply( add(low1, high1), add(low2,high2) ), z2), z0);
+	
+	c = add( add( shift_left(z2, m), shift_left(z1, m/2) ), z0);
+	return unpad_zeroes(c);
+}
+
+
+
 
 
 int main(){
@@ -158,6 +339,8 @@ int main(){
 	cin>>a>>b;
 	cout<<add(a,b)<<endl;
 	cout<<sub(a,b)<<endl;
+	cout<<multiply(a,b)<<endl;
+	cout<<naive_multiply(a,b)<<endl;
 	cout<<div_by_two(a)<<endl;
 	return 0;
 }
