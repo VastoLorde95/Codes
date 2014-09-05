@@ -7,12 +7,13 @@
 */
 #include<iostream>
 #include<string>
+#include<cmath>
 using namespace std;
 
 string add(string a, string b);
 string sub(string a, string b);
 string multiply(string a, string b);
-string naive_multiply(string a, string b);
+string naive_multiply(string &a, string &b);
 
 /*
 *  A few helper functions
@@ -20,7 +21,7 @@ string naive_multiply(string a, string b);
 
 
 /*This appends m 0s to the end of the string to act as a multiplication by 10^m*/
-string shift_left(string a, int m){
+string shift_left(string &a, int m){
 	while(m--){
 		a = a + (char)(48);
 	}
@@ -28,25 +29,26 @@ string shift_left(string a, int m){
 }
 
 /*This function removes all valueless 0s from the starting of the string*/
-string unpad_zeroes(string a){
+void unpad_zeroes(string &a){
 	int i = 0;
+	int l = a.length();
 	string zero("0");
 	while(a[i] == '0'){
-		a = a.substr(i+1);
+		i++;
 	}
+	a = a.substr(i);
 	if(a.length() == 0){
-		return zero;
+		a = zero;
 	}
-	return a;
 }
 
 /*This appends 'l' of zeroes to the beggining of the string*/
-string pad(string a, int l){
+void pad(string &a, int l){
 	while(l--){
 		a = '0' + a;
 	}
 	
-	return a;
+	//return a;
 }
 
 
@@ -65,21 +67,23 @@ string add(string a, string b){
 	else if(b[0] == '-')
 		return sub(a, b.substr(1));
 	
+	unpad_zeroes(a);
+	unpad_zeroes(b);
 	
 	int a_length = a.length(), b_length = b.length();
-	if(a == "0")
-		return unpad_zeroes(b);
+	if(a == "0")	
+		return b;
 	else if(b == "0")
-		return unpad_zeroes(a);
-	
+		return a;
+
 	string c = "";		//This is the new string where the result will be stored
 	
-	int digit1, digit2, total = 0, carry = 0, j = 0, i = a_length -1;		//digit1 and digit2 are the digits of a and b respectively
+	int digit1, digit2, total = 0, carry = 0, j = b_length -1, i = a_length -1;		//digit1 and digit2 are the digits of a and b respectively
 	
-	for(j = b_length -1; j >= 0 && i >= 0; j--){	//The loop runs till either of the numbers a or b run out of digits to compute upon
+	for(; j >= 0 && i >= 0; j--){	//The loop runs till either of the numbers a or b run out of digits to compute upon
 	
-		digit1 = a[i] - 48;
 		//The character is converted from its ASCII value to an integer value, computed upon and then converted back to ASCII
+		digit1 = a[i] - 48;		
 		digit2 = b[j] - 48;
 		
 		total = digit1 + digit2 + carry;
@@ -93,7 +97,7 @@ string add(string a, string b){
 		i--;
 	}
 	if(i >= 0){				//This handles the case where a has more digits than b
-		while(i>=0){
+		while(i >= 0){
 		
 			digit1 = a[i] - 48;
 			
@@ -122,7 +126,8 @@ string add(string a, string b){
 	
 	if (carry != 0) c = char(carry + 48) + c;		//This takes care of the final carry over if any
 	
-	return unpad_zeroes(c);
+	unpad_zeroes(c);
+	return c;
 }
 
 
@@ -151,12 +156,12 @@ string sub(string a, string b){
 	string c = "", temp ="";		//The temp string has been made to accomodate string swaps
 	
 	if(a_length > b_length){
-		b = pad(b, a_length - b_length);
+		pad(b, a_length - b_length);
 		j = b_length - 1;
 		i = a_length - 1;
 	}		
 	else if(a_length < b_length){
-		a = pad(a , b_length - a_length);
+		pad(a , b_length - a_length);
 		j = a_length - 1;
 		i = b_length - 1;
 	}
@@ -176,11 +181,11 @@ string sub(string a, string b){
 		b = temp;
 	}
 	
-	a = unpad_zeroes(a);
-	b = unpad_zeroes(b);
+	unpad_zeroes(a);
+	unpad_zeroes(b);
 	
 	if(b == "0"){
-		return unpad_zeroes(a);
+		return a;
 	}
 
 	for(j; j >= 0; j--){
@@ -210,7 +215,7 @@ string sub(string a, string b){
 			i--;
 		}
 	}
-	c = unpad_zeroes(c);
+	unpad_zeroes(c);
 	if(is_negative)
 		return '-' + c;
 	
@@ -238,11 +243,7 @@ string div_by_two(string a){
 			carry = 0;
 	}
 	
-	int j = 0;
-	
-	while(c[j] == '0') c = c.substr(j+1); //Removing the valuless 0s in the beginning
-	
-	if(c.length() == 0) c = '0';		//Fixes the case where the previous loop removes all 0s even thought the answer is zero
+	unpad_zeroes(c);
 	
 	return c;
 }
@@ -253,7 +254,7 @@ string div_by_two(string a){
 The grade school multiplication algorithm for 2 numbers. This is of order n*m and is just a helper function
 for the Karatsuba algorithm.
 */
-string naive_multiply(string a, string b){
+string naive_multiply(string &a, string &b){
 	string c = "0", temp = "", zeroes = "";	// each time a single digit from 'a' is multiplied to b, it is stored in temp
 	// 'c' is the final string that is returned
 	int a_length = a.length(), b_length = b.length(), i = a_length - 1, j, digit1, digit2, total, carry = 0;
@@ -282,7 +283,8 @@ string naive_multiply(string a, string b){
 		i--;
 	}
 	
-	return unpad_zeroes(c);
+	unpad_zeroes(c);
+	return c;
 }
 
 
@@ -295,54 +297,43 @@ computations than the generic grade-school algorithm which involves n*m single d
 mulitplications. The complexity is n^{\log_23}
  */
 string multiply(string a, string b){
-	string c;
+	unpad_zeroes(a);
+	unpad_zeroes(b);
+	if ( a == "0" or b == "0" or a == "" or b == "")
+		return "0";
 	float a_length = a.length(), b_length = b.length();
-
+	
 	/*If the either of the two strings represents a single digit number, then we apply the grade school algorithm.
 	  This is the terminating case for recursion*/
 	if(a_length < 2 or b_length < 2)
 		return naive_multiply(a, b);
 		
-	if(a_length < b_length)
-		a = pad(a, b_length - a_length);
-	else if(a_length> b_length)
-		b = pad(b, a_length - b_length);
-	
-	int m = max(a_length, b_length);
-	
-	if( m % 2 == 1){
-		a = pad(a,1);
-		b = pad(b,1);
-		m++;
-	}
-		
-	//After initial computation and padding, the numbers are split into their upper and lower halves
-	string low1 = a.substr(m/2), low2 = b.substr(m/2) , high1 = a.substr(0, m/2), high2 = b.substr(0, m/2);
+	string c("");
+	int m = ceil(max(a_length, b_length) / 2);
+	int p1 = a_length - m;
+	int p2 = b_length - m;
 
-	low1  = unpad_zeroes(low1);
-	low2  = unpad_zeroes(low2);
-	high1 = unpad_zeroes(high1);
-	high2 = unpad_zeroes(high2);
-
+	if(p1 < 0) p1 = 0;
+	if(p2 < 0) p2 = 0;
+	
+	//The numbers are split into their upper and lower halves
+	string low1 = a.substr(p1), low2 = b.substr(p2) , high1 = a.substr(0, p1), high2 = b.substr(0, p2);
+	
 	string z0 = multiply(low1, low2);
 	string z2 = multiply(high1, high2);
 	string z1 = sub( sub( multiply( add(low1, high1), add(low2,high2) ), z2), z0);
 	
-	c = add( add( shift_left(z2, m), shift_left(z1, m/2) ), z0);
-	return unpad_zeroes(c);
+	c = add( add( shift_left(z2, 2*m), shift_left(z1, m) ), z0);
+	return c;
 }
-
-
-
-
 
 int main(){
 	string a,b;
 	cin>>a>>b;
-	cout<<add(a,b)<<endl;
-	cout<<sub(a,b)<<endl;
-	cout<<multiply(a,b)<<endl;
-	cout<<naive_multiply(a,b)<<endl;
-	cout<<div_by_two(a)<<endl;
+	//cout<<add(a,b)<<endl;
+	//cout<<sub(a,b)<<endl;
+	//cout<<multiply(a, b)<<endl;
+	//cout<<naive_multiply(a,b)<<endl;
+	//cout<<div_by_two(a)<<endl;
 	return 0;
 }
