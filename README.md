@@ -2,8 +2,9 @@ Codes
 =====
 These are pieces of code and algorithms I have implemented which have helped me solve some competitive programming challenges. Feel free to use them.
 
-Numbers as Strings
+String Arithmetic
 ==================
+string_arithmetic.cpp
 This is a C++ implementation that handles numbers that are bigger than 64 bits long. It works by storing the numbers
 as C++ strings. Custom functions have been defined that perform basic arithmetic operations like additon and subtraction
 on the given numbers.
