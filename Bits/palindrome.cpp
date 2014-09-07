@@ -1,6 +1,19 @@
 #include<iostream>
 #include<string>
 using namespace std;
+
+/*There are in total 3 cases that we need to handle
+*	Case 1 - The input is all nines eg. 999. Output should be 1001
+*	
+*	Case 2 - The input is not a palindrome
+*
+*	Case 3 - Input is a palindrome.
+*
+*	In Cases 2 and 3 we have to handle two subcases where the number of digits are odd
+*	or even. The logic is that the middle number is incremented by 1 and the carry is 
+*	propogated on the left hand side and simultaneously the left hand side is copied to the right hand side.
+*
+*/
 bool is_all_nines(string a){
 	int l = a.length(), i = 0;
 	while(i < l){
