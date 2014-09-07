@@ -5,6 +5,7 @@ These are pieces of code and algorithms I have implemented which have helped me 
 Bits
 ======
 Small pieces of code that perform small operations.
+
 1. palindrome.cpp = given a number, it generates the next succesive palindrome in the number series
 
 String Arithmetic
