@@ -25,4 +25,4 @@ The following functions have been implemented for string arithmetic in string_op
 
 Coming Soon
 ==============
-Functions for pow(a,b) and and factorial(a)
+String Arithmetic - Functions for pow(a,b) and and factorial(a)
