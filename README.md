@@ -14,11 +14,17 @@ String Arithmetic
 
 *********************
 Some Observations:
-If some you test it out then you wil realize that string is a hihly ineffiecient data structure for storing data on which we want to compute arithmetic operations. 
+
+If some you test it out then you wil realize that string is a highly ineffiecient data structure for storing data on which we want to compute arithmetic operations. 
+
 Python 2.7 takes ~0.017 seconds to multiply two numbers of 5000 and 1000 digits.
-This library takes ~2.6 seconds the same two numbers.
+This library takes ~2.6 seconds for the same two numbers.
+
+Python 2.7 takes ~0.000002 seconds to add two numbers of 5000 and 1000 digits.
+This library takes ~0.006 seconds for the same two numbers.
 
 That is ridiculously slow!! 
+I will be studying how different libraries handle numbers greater than 64 bits.
 I will be making a library in C++ to handle very large numbers like this and will be performing an analysis of C++ vs Python 2.7.
 
 I speculate Python to be faster since it is written in C
