@@ -10,6 +10,22 @@ Small pieces of code that perform small operations.
 
 String Arithmetic
 ==================
+
+
+*********************
+Some Observations:
+If some you test it out then you wil realize that string is a hihly ineffiecient data structure for storing data on which we want to compute arithmetic operations. 
+Python 2.7 takes ~0.017 seconds to multiply two numbers of 5000 and 1000 digits.
+This library takes ~2.6 seconds the same two numbers.
+
+That is ridiculously slow!! 
+I will be making a library in C++ to handle very large numbers like this and will be performing an analysis of C++ vs Python 2.7.
+
+I speculate Python to be faster since it is written in C
+
+*********************
+
+
 string_arithmetic.cpp
 This is a C++ implementation that handles numbers that are bigger than 64 bits long. It works by storing the numbers
 as C++ strings. Custom functions have been defined that perform basic arithmetic operations like additon and subtraction
