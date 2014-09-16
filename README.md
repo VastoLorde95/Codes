@@ -17,7 +17,7 @@ Some Observations:
 
 If some you test it out then you wil realize that string is a highly ineffiecient data structure for storing data on which we want to compute arithmetic operations. 
 
-Python 2.7 takes ~0.017 seconds to multiply two numbers of 5000 and 1000 digits.
+Python 2.7 takes ~0.00006 seconds to multiply two numbers of 5000 and 1000 digits.
 This library takes ~2.6 seconds for the same two numbers.
 
 Python 2.7 takes ~0.000002 seconds to add two numbers of 5000 and 1000 digits.
