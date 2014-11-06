@@ -42,9 +42,3 @@ I will be studying how different libraries handle numbers greater than 64 bits.
 I will be making a library in C++ to handle very large numbers like this and will be performing an analysis of C++ vs Python 2.7.
 
 I speculate Python to be faster since it is written in C
-
-*********************
-
-Coming Soon
-==============
-String Arithmetic - Functions for pow(a,b) and and factorial(a)
