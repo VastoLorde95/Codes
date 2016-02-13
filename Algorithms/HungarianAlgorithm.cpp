@@ -1,13 +1,13 @@
 #include <bits/stdc++.h>
 
-#define sd(match) scanf("%d",&match)
-#define sd2(match,y) scanf("%d%d",&match,&y)
-#define sd3(match,y,z) scanf("%d%d%d",&match,&y,&z)
+#define sd(x) scanf("%d",&x)
+#define sd2(x,y) scanf("%d%d",&x,&y)
+#define sd3(x,y,z) scanf("%d%d%d",&x,&y,&z)
 
 #define fi first
 #define se second
-#define pb(match) push_back(match)
-#define mp(match,y) make_pair(match,y)
+#define pb(x) push_back(x)
+#define mp(x,y) make_pair(x,y)
 #define LET(match, a)  __typeof(a) match(a)
 #define foreach(it, v) for(LET(it, v.begin()); it != v.end(); it++)
 
