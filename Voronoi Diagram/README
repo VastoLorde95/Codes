@@ -1,0 +1,39 @@
+---------------------------------------
+Fortune's Algorithm for Voronoi Diagram
+--------------------------------------- 
+
+This program constructs the Voronoi Diagram for N points given that no four points are co-circular. The implementation is based on the linesweep algorithm by Steven Fortune discovered in 1987.
+
+The implementation follows the same structure as the implementation in reference [3]. The code provided in [3] had a few bugs in case when then edge of the Voronoi diagram is a vertical line, i.e., handling edges with infinite slope and the code was written for Windows. This implementation rectifies the bugs and is written for Linux systems.
+
+For a data set of N points, the algorithm has the following bounds on running time and memory.
+
+Time Complexity :   O(N log N)
+Memory Complexity : O(N)
+
+-----------------------
+How to Run the Program?
+-----------------------
+
+The program was written and tested on Ubuntu 14.04.
+
+You need the following to run this program :
+
+[a] GNU G++ 4.8.4
+[b] C++ OpenGL
+
+
+To compile the program go to the directory with the Makefile enter the command "make"
+
+Then run ./a.out to generate the Voronoi diagram for a randomly generated data set of N points.
+
+Run "make clean" to delete the compiled binary.
+
+To change the number of points in the dataset, open the file "main.cpp" and edit the value of the const variable 'N' in line number 41. and re-run the make command.
+
+(The program uses 4 space indentation and the K&R bracketing style)
+
+References:
+[1] Steven Fortune, A Sweepline Algorithm for Voronoi Diagrams, Algorithmica (1987) 2:153-174
+[2] Lecture 16, Voronoi Diagrams and Fortune's Algorithm, University of Maryland, CMSC 754, http://people.math.gatech.edu/~randall/AdvAlgs15/mount.pdf, last accessed on 18th April 2017.
+[3] Ivan K., Fortune’s algorithm and implementation, http://blog.ivank.net/fortunes-algorithm-and-implementation.html
